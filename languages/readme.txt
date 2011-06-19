@@ -1,0 +1,1 @@
+Please put the translated mo file in this directory. Make sure that your mo file is named as Your_Local.mo(eg. en_US.mo)
