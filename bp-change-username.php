@@ -39,7 +39,7 @@ add_action ( 'bp_init', 'bpdev_bpcu_load_textdomain', 2 );
 //setup nav
 function bpdev_bpcu_nav_setup(){
      global $bp;
-	$settings_link = $bp->loggedin_user->domain . $bp->settings->slug . '/';
+	$settings_link = $bp->loggedin_user->domain . bp_get_settings_slug() . '/';
         bp_core_new_subnav_item( array( 'name' => __( 'Change Username', 'bpcu' ), 'slug' => BPCU_SLUG, 'parent_url' => $settings_link, 'parent_slug' => $bp->settings->slug, 'screen_function' => 'bpdev_bpcu_settings_screen', 'position' => 30, 'user_has_access' => bp_is_my_profile() ) );
 	
 }
@@ -144,13 +144,14 @@ function bpdev_bpcu_title(){
 
 //check if a username is reserved
 function bpdev_bpcu_is_reserved_name($username){
+    $reserved=array();
     $admin_names=array("admin","administrator");
     if(is_super_admin()&&in_array($username,$admin_names))
         return false;//do not prohibit the super admin from any username
    //other than that, check for all illigal names 
     if(function_exists('bp_core_get_illegal_names'))
         $reserved=bp_core_get_illegal_names();
-    else
+    else if(function_exists('bp_core_illegal_names'))
         $reserved=bp_core_illegal_names();
     
     if(in_array($username,(array)$reserved))
