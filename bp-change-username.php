@@ -4,9 +4,9 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.0
+ * Version: 1.0.1
  * License: GPL
- * Last Updated:May 06, 2011
+ * Last Updated:September 09, 2011
  */
 /**
  * allow users to change their username
@@ -148,9 +148,12 @@ function bpdev_bpcu_is_reserved_name($username){
     if(is_super_admin()&&in_array($username,$admin_names))
         return false;//do not prohibit the super admin from any username
    //other than that, check for all illigal names 
-    $reserved=bp_core_get_illegal_names();
+    if(function_exists('bp_core_get_illegal_names'))
+        $reserved=bp_core_get_illegal_names();
+    else
+        $reserved=bp_core_illegal_names();
     
-    if(in_array($username,$reserved))
+    if(in_array($username,(array)$reserved))
             return true;
 }
 ?>
