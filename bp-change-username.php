@@ -24,7 +24,7 @@ function bpdev_bpcu_load_textdomain() {
 	// if load .mo file
         
 	if ( !empty( $locale ) ) {
-		$mofile_default = sprintf( '%slanguages/%s.mo', BPCU_PLUGIN_DIR, BPCU_PLUGIN_NAME, $locale );
+		$mofile_default = sprintf( '%slanguages/%s.mo', BPCU_PLUGIN_DIR,  $locale );
              
 		$mofile = apply_filters( 'bpdev_bpcu_load_textdomain_mofile', $mofile_default );
 		
