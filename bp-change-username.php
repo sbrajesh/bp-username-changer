@@ -73,8 +73,9 @@ function bpdev_bpcu_settings_screen() {
 	
 	global $wpdb, $bp, $current_user;
 
-	$error		= false;
-	$user_id	= get_current_user_id();
+	$error			= false;
+	$is_super_admin = false;
+	$user_id		= get_current_user_id();
 
 	if ( isset( $_POST['bpcu_change_username_submit' ] ) ) {
 		
@@ -121,6 +122,16 @@ function bpdev_bpcu_settings_screen() {
 		
 		$changed = array( 'ID' => $user_id, 'user_login' => $new_user_name, 'user_nicename' => sanitize_title( $new_user_name ) );
 
+		//if it is multisite, before change the username, revoke the admin capability
+		if( is_multisite() && is_super_admin( $user_id ) ) {
+			
+			if( ! function_exists( 'revoke_super_admin' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+			}
+
+			$is_super_admin = true;
+			revoke_super_admin( $user_id );
+		}
 		wp_update_user( $changed ); //it will change nicename properly
 		//update user_login
 		$wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
@@ -131,14 +142,21 @@ function bpdev_bpcu_settings_screen() {
 		
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
-
+				
 		//reset auth cookie for new user_login
 		wp_set_auth_cookie( $user_id, true, false );
 		//force to reset the global $current_user with the new user details
 		$current_user = null;
 		wp_set_current_user( $user_id ); //reset user
-
 		$user = wp_get_current_user();
+		//if multisite and the user was super admin, mark him back as super admin
+		
+		if( is_multisite() && $is_super_admin ){
+			grant_super_admin( $user_id );
+		}
+
+
+		
 
 		bp_core_add_message( __( 'Username Changed Successfully!', 'bpcu' ) );
 
