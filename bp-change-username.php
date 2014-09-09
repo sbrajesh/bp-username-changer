@@ -4,9 +4,9 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.0.1
+ * Version: 1.1
  * License: GPL
- * Last Updated:September 09, 2011
+ * Last Updated: September 09, 2014
  */
 /**
  * allow users to change their username
