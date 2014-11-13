@@ -129,10 +129,7 @@ function bpdev_bpcu_settings_screen() {
 			return;//we don't need this return anyway
 		}
 
-		//if we are here, there is no error and we can change the username
-		//update user_nicename, easy way, let the wp_update_user do it for you
 		$old_user_data = $bp->displayed_user->userdata;
-		$changed = array( 'ID' => $user_id, 'user_login' => $new_user_name, 'user_nicename' => sanitize_title( $new_user_name ) );
 
 		//if it is multisite, before change the username, revoke the admin capability
 		if( is_multisite() && is_super_admin( $user_id ) ) {
@@ -149,9 +146,13 @@ function bpdev_bpcu_settings_screen() {
 
 		// this will update user_nicename
 		// wp_update_user() doesn't update user_login when updating a user... sucks!
-		wp_update_user( $changed );
+		wp_update_user( array(
+			'ID' => $user_id,
+			'user_login' => $new_user_name,
+			'user_nicename' => sanitize_title( $new_user_name )
+		) );
 
-		// this will update user_login
+		// manually update user_login
 		$wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
 
 		// delete object cache
