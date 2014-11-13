@@ -90,6 +90,11 @@ function bpdev_bpcu_settings_screen() {
 		//check_admin_referer('bp_settings_change_username');
 
 		$new_user_name = $_POST['bpcu_new_user_name'];
+
+		// username_exists() references the userlogins object cache, so we must clear
+		// it before using the function
+		wp_cache_delete( $new_user_name, 'userlogins' );
+		wp_cache_delete( $_POST['bpcu_current_user_name'], 'userlogins' );
 		
 		//if the username is empty or invalid
 		if ( empty( $new_user_name ) || !validate_username( $new_user_name ) ) {
@@ -146,7 +151,6 @@ function bpdev_bpcu_settings_screen() {
 
 		//delete cache
 		wp_cache_delete( $user_id, 'users' );
-		wp_cache_delete( $user_login, 'userlogins' );
 
 		wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
