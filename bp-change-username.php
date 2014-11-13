@@ -127,7 +127,7 @@ function bpdev_bpcu_settings_screen() {
 
 		//if we are here, there is no error and we can change the username
 		//update user_nicename, easy way, let the wp_update_user do it for you
-		
+		$old_user_data = $bp->displayed_user->userdata;
 		$changed = array( 'ID' => $user_id, 'user_login' => $new_user_name, 'user_nicename' => sanitize_title( $new_user_name ) );
 
 		//if it is multisite, before change the username, revoke the admin capability
@@ -169,9 +169,9 @@ function bpdev_bpcu_settings_screen() {
 
 		bp_core_add_message( __( 'Username Changed Successfully!', 'bpcu' ) );
 
-		do_action( 'profile_update', $user_id, $current_user );
+		do_action( 'profile_update', $user_id, $old_user_data );
 		
-		bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
+		bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
 		
 		return;
 	}
