@@ -155,6 +155,7 @@ function bpdev_bpcu_settings_screen() {
 		$wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
 
 		// delete object cache
+		clean_user_cache( $user_id );
 		wp_cache_delete( $user_id, 'users' );
 		wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
