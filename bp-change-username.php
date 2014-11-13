@@ -144,13 +144,18 @@ function bpdev_bpcu_settings_screen() {
 			$is_super_admin = true;
 			revoke_super_admin( $user_id );
 		}
-		wp_update_user( $changed ); //it will change nicename properly
-		//update user_login
+
+		/* now, update the user_login / user_nicename in the database */
+
+		// this will update user_nicename
+		// wp_update_user() doesn't update user_login when updating a user... sucks!
+		wp_update_user( $changed );
+
+		// this will update user_login
 		$wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
 
-		//delete cache
+		// delete object cache
 		wp_cache_delete( $user_id, 'users' );
-
 		wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
@@ -166,9 +171,6 @@ function bpdev_bpcu_settings_screen() {
 		if( is_multisite() && $is_super_admin ){
 			grant_super_admin( $user_id );
 		}
-
-
-
 
 		bp_core_add_message( __( 'Username Changed Successfully!', 'bpcu' ) );
 
