@@ -54,7 +54,7 @@ function bpdev_bpcu_nav_setup() {
 	
 	$bp = buddypress();
 	
-	$settings_link = bp_loggedin_user_domain() . bp_get_settings_slug() . '/';
+	$settings_link = bp_displayed_user_domain() . bp_get_settings_slug() . '/';
 	
 	bp_core_new_subnav_item( array(
 		'name' => __( 'Change Username', 'bpcu' ),
@@ -81,9 +81,9 @@ function bpdev_bpcu_settings_screen() {
 	
 	global $wpdb, $bp, $current_user;
 
-	$error			= false;
+	$error          = false;
 	$is_super_admin = false;
-	$user_id		= get_current_user_id();
+	$user_id        = bp_displayed_user_id();
 
 	if ( isset( $_POST['bpcu_change_username_submit' ] ) ) {
 		
@@ -97,7 +97,7 @@ function bpdev_bpcu_settings_screen() {
 			$error = true;
 			$message = __( 'Please enter a valid Username!', 'bpcu' );
 			
-		} elseif ( ! $error && $current_user->user_login == $new_user_name ) {
+		} elseif ( ! $error && $bp->displayed_user->userdata->user_login == $new_user_name ) {
 			//if the provided name is same as the current username
 			$error = true;
 			$message = __( 'Please enter a differnt Username!', 'bpcu' );
@@ -120,7 +120,7 @@ function bpdev_bpcu_settings_screen() {
 			
 			bp_core_add_message( $message, 'error' );
 			
-			bp_core_redirect( bp_core_get_user_domain( $user_id ) . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
+			bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
 			
 			return;//we don't need this return anyway
 		}
@@ -147,7 +147,8 @@ function bpdev_bpcu_settings_screen() {
 		//delete cache
 		wp_cache_delete( $user_id, 'users' );
 		wp_cache_delete( $user_login, 'userlogins' );
-		
+
+		wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
 				
@@ -187,12 +188,12 @@ function bpdev_bpcu_settings_screen() {
  * @global null $current_user
  */
 function bpdev_bpcu_form() {
-	global $current_user;
+	$bp = buddypress();
 	?>
 	<form name="bpcu_username_changer" method="post" class="standard-form">
 		
 		<label for="bpcu_current_user_name"><?php _e("Current User name", "bpcu") ?></label>
-		<input type="text" name="bpcu_current_user_name" id="bpcu_current_user_name" value="<?php echo esc_attr( $current_user->user_login ); ?>" class="settings-input"  disabled="disabled"/>
+		<input type="text" name="bpcu_current_user_name" id="bpcu_current_user_name" value="<?php echo esc_attr( $bp->displayed_user->userdata->user_login ); ?>" class="settings-input"  disabled="disabled"/>
 
 		<label for="new_user_name"><?php _e("New User name", "bpcu") ?></label>
 		<input type="text" name="bpcu_new_user_name" id="bpcu_new_user_name" value="" class="settings-input" />
