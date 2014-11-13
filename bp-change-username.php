@@ -56,7 +56,15 @@ function bpdev_bpcu_nav_setup() {
 	
 	$settings_link = bp_loggedin_user_domain() . bp_get_settings_slug() . '/';
 	
-	bp_core_new_subnav_item( array( 'name' => __( 'Change Username', 'bpcu' ), 'slug' => BPCU_SLUG, 'parent_url' => $settings_link, 'parent_slug' => $bp->settings->slug, 'screen_function' => 'bpdev_bpcu_settings_screen', 'position' => 30, 'user_has_access' => bp_is_my_profile() ) );
+	bp_core_new_subnav_item( array(
+		'name' => __( 'Change Username', 'bpcu' ),
+		'slug' => BPCU_SLUG,
+		'parent_url' => $settings_link,
+		'parent_slug' => $bp->settings->slug,
+		'screen_function' => 'bpdev_bpcu_settings_screen',
+		'position' => 30,
+		'user_has_access' => apply_filters( 'bpcu_user_has_access', bp_is_my_profile() ),
+	) );
 }
 
 add_action('bp_setup_nav', 'bpdev_bpcu_nav_setup', 11);
