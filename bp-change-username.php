@@ -129,8 +129,6 @@ function bpdev_bpcu_settings_screen() {
 			return;//we don't need this return anyway
 		}
 
-		$old_user_data = $bp->displayed_user->userdata;
-
 		//if it is multisite, before change the username, revoke the admin capability
 		if( is_multisite() && is_super_admin( $user_id ) ) {
 
@@ -185,7 +183,7 @@ function bpdev_bpcu_settings_screen() {
 
 		bp_core_add_message( __( 'Username Changed Successfully!', 'bpcu' ) );
 
-		do_action( 'profile_update', $user_id, $old_user_data );
+		do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata );
 
 		bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
 
