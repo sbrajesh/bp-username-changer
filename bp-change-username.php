@@ -63,7 +63,7 @@ function bpdev_bpcu_nav_setup() {
 		'parent_slug' => $bp->settings->slug,
 		'screen_function' => 'bpdev_bpcu_settings_screen',
 		'position' => 30,
-		'user_has_access' => apply_filters( 'bpcu_user_has_access', bp_is_my_profile() ),
+		'user_has_access' => apply_filters( 'bpcu_user_has_access', bp_is_my_profile() || is_super_admin() ),
 	) );
 }
 
