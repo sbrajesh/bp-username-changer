@@ -181,11 +181,18 @@ function bpdev_bpcu_settings_screen() {
 			grant_super_admin( $user_id );
 		}
 
+		// add message
 		bp_core_add_message( __( 'Username Changed Successfully!', 'bpcu' ) );
 
-		do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata );
+		// fetch the user object just in case plugins altered the user_login
+		$user = new WP_User( $user_id );
 
-		bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
+		// hook for plugins
+		do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata, $user );
+
+		// redirect
+		// bp_core_get_user_domain() requires the new user_nicename / user_login
+		bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
 
 		return;
 	}
