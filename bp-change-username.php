@@ -155,14 +155,14 @@ function bpdev_bpcu_settings_screen() {
 		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
 
-		//reset auth cookie for new user_login
-		wp_set_auth_cookie( $user_id, true, false );
-		//force to reset the global $current_user with the new user details
-		$current_user = null;
-		wp_set_current_user( $user_id ); //reset user
-		$user = wp_get_current_user();
-		//if multisite and the user was super admin, mark him back as super admin
+		// reset auth cookie for new user_login
+		// only do this if the current user is attempting to change their own username
+		if ( bp_is_my_profile() ) {
+			wp_set_auth_cookie( $user_id, true, false );
+			wp_set_current_user( $user_id ); //reset user
+		}
 
+		//if multisite and the user was super admin, mark him back as super admin
 		if( is_multisite() && $is_super_admin ){
 			grant_super_admin( $user_id );
 		}
