@@ -162,9 +162,18 @@ function bpdev_bpcu_settings_screen() {
 
 		// reset auth cookie for new user_login
 		// only do this if the current user is attempting to change their own username
+		// copies auth cookie logic from wp_update_user()
 		if ( bp_is_my_profile() ) {
-			wp_set_auth_cookie( $user_id, true, false );
-			wp_set_current_user( $user_id ); //reset user
+			wp_clear_auth_cookie();
+
+			// Here we calculate the expiration length of the current auth cookie and compare it to the default expiration.
+			// If it's greater than this, then we know the user checked 'Remember Me' when they logged in.
+			$logged_in_cookie    = wp_parse_auth_cookie( '', 'logged_in' );
+			/** This filter is documented in wp-includes/pluggable.php */
+			$default_cookie_life = apply_filters( 'auth_cookie_expiration', ( 2 * DAY_IN_SECONDS ), $user_id, false );
+			$remember            = ( ( $logged_in_cookie['expiration'] - time() ) > $default_cookie_life );
+
+			wp_set_auth_cookie( $user_id, $remember );
 		}
 
 		//if multisite and the user was super admin, mark him back as super admin
