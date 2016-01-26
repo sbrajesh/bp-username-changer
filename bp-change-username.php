@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
 }
 
-//deprectade BPCU_SLUG in fafour of BP_USERNAME_CHANGER_SLUG
+//deprectade BP_USERNAME_CHANGER_SLUG in fafour of BP_USERNAME_CHANGER_SLUG
 //settings subtab slug, change it as you please
 if ( ! defined( 'BP_USERNAME_CHANGER_SLUG' ) ) {
 	define( 'BP_USERNAME_CHANGER_SLUG', 'change-username' );
@@ -97,7 +97,7 @@ class BP_Username_Change_Helper {
 		global $wpdb;
         $bp = buddypress();
 
-		$error          = false;
+		$error          = new WP_Error();
 		$is_super_admin = false;
 		$user_id        = bp_displayed_user_id();
 
@@ -115,29 +115,21 @@ class BP_Username_Change_Helper {
 
             //if the username is empty or invalid
             if ( empty( $new_user_name ) || ! validate_username( $new_user_name ) ) {
-				$error = true;
-				$message = __( 'Please enter a valid Username!', 'bp-username-changer' );
-
+				$error->add( 'invalid', __( 'Please enter a valid Username!', 'bp-username-changer' ) );
             } elseif ( ! $error && $bp->displayed_user->userdata->user_login == $new_user_name ) {
-		
-                //if the provided name is same as the current username
-				$error = true;
-				$message = __( 'Please enter a differnt Username!', 'bp-username-changer' );
-
+				$error->add('nochange', __( 'Please enter a different Username!', 'bp-username-changer' ) );
             } elseif ( ! $error && username_exists( $new_user_name ) ) {
-                //else if the username already exists
-				$error	 = true;
-				$message = sprintf( __( 'The Username %s already exists. Please use a different username!', 'bp-username-changer' ), $new_user_name );
+				$error->add('exiting_username', sprintf( __( 'The Username %s already exists. Please use a different username!', 'bp-username-changer' ), $new_user_name ) );
             } elseif ( ! $error && $this->is_reserved_name( $new_user_name ) )  {
-				$error	 = true;
-				$message = sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name );
+				$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name ) );
             }
 
+			$error = apply_filters( 'bp_username_changer_validation_errors', $error, $new_user_name );
             //if there was an error
             //show error &redirect
-            if ( $error ) {
-				bp_core_add_message( $message, 'error' );
-				bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
+            if ( $error->get_error_code() ) {
+				bp_core_add_message( $error->get_error_message(), 'error' );
+				bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 				
             }
 
@@ -204,7 +196,7 @@ class BP_Username_Change_Helper {
             do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata, $user );
             // redirect
             // bp_core_get_user_domain() requires the new user_nicename / user_login
-            bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BPCU_SLUG . '/' );
+            bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 
         }
         
@@ -262,12 +254,14 @@ class BP_Username_Change_Helper {
     * @return boolean
     */
     public function is_reserved_name( $username ) {
-
+		
+		$is_reserved = false;// assume that it is not reserved and let us check selectively
+		
 		$reserved = array();
 
 		$admin_names = array( 'admin', 'administrator' );
 
-		if ( is_super_admin() && in_array( $username, $admin_names ) ){
+		if ( is_super_admin() && in_array( $username, $admin_names ) ) {
 			return false; //do not prohibit the super admin from any username
 		}
 		
@@ -278,12 +272,11 @@ class BP_Username_Change_Helper {
 				$reserved = bp_core_illegal_names();
 		}
 
-        if ( in_array( $username, (array) $reserved ) ) {            
-            return true;
+        if ( in_array( $username, (array) $reserved ) ) { 
+            $is_reserved =  true;
         }
-		
-		return false;
-    
+
+		return apply_filters( 'bp_username_changer_is_reserved', $is_reserved, $username );
     }
 
 }
