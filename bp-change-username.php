@@ -4,17 +4,22 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.1
+ * Version: 1.1.0
  * License: GPL
- * Last Updated: September 09, 2014
+ * Last Updated: january 26, 2016
  */
 /**
  * allow users to change their username
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 0 );
+}
 
 //settings subtab slug
-if ( !defined( 'BPCU_SLUG' ) )
-	define( 'BPCU_SLUG', 'change-username' );
+//deprectade BPCU_SLUG in fafour of BP_USERNAME_CHANGER_SLUG
+if ( ! defined( 'BP_USERNAME_CHANGER_SLUG' ) ) {
+	define( 'BP_USERNAME_CHANGER_SLUG', 'change-username' );
+}
 
 class BP_Username_Change_Helper {
     
