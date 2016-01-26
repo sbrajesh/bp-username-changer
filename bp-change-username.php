@@ -124,81 +124,81 @@ class BP_Username_Change_Helper {
 			$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name ) );
 		}
 
-			$error = apply_filters( 'bp_username_changer_validation_errors', $error, $new_user_name );
-            //if there was an error
-            //show error &redirect
-            if ( $error->get_error_code() ) {
-				bp_core_add_message( $error->get_error_message(), 'error' );
-				bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
-				
-            }
+		$error = apply_filters( 'bp_username_changer_validation_errors', $error, $new_user_name );
+		//if there was an error
+		//show error &redirect
+		if ( $error->get_error_code() ) {
+			bp_core_add_message( $error->get_error_message(), 'error' );
+			bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 
-            //if it is multisite, before change the username, revoke the admin capability
-            if ( is_multisite() && is_super_admin( $user_id ) ) {
+		}
 
-				if ( ! function_exists( 'revoke_super_admin' ) ) {
-	                   require_once( ABSPATH . 'wp-admin/includes/ms.php' );
-	            }
+		//if it is multisite, before change the username, revoke the admin capability
+		if ( is_multisite() && is_super_admin( $user_id ) ) {
 
-				$is_super_admin = true;
-		
-				revoke_super_admin( $user_id );
-		    }
-            /* now, update the user_login / user_nicename in the database */
-            // this will update user_nicename
-            // wp_update_user() doesn't update user_login when updating a user... sucks!
-            wp_update_user( array(
-                
-                'ID'            => $user_id,
-            	'user_login'    => $new_user_name,
-				'user_nicename' => sanitize_title( $new_user_name )
-                
-            ) );
+			if ( ! function_exists( 'revoke_super_admin' ) ) {
+				   require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+			}
 
-            // manually update user_login
-            $wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
+			$is_super_admin = true;
 
-            // delete object cache
-            clean_user_cache( $user_id );
-            wp_cache_delete( $user_id, 'users' );
-            wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
-            wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
-            wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
+			revoke_super_admin( $user_id );
+		}
+		/* now, update the user_login / user_nicename in the database */
+		// this will update user_nicename
+		// wp_update_user() doesn't update user_login when updating a user... sucks!
+		wp_update_user( array(
 
-            // reset auth cookie for new user_login
-            // only do this if the current user is attempting to change their own username
-            // copies auth cookie logic from wp_update_user()
-            if ( bp_is_my_profile() ) {
-				wp_clear_auth_cookie();
-				// Here we calculate the expiration length of the current auth cookie and compare it to the default expiration.
-				// If it's greater than this, then we know the user checked 'Remember Me' when they logged in.
-				$logged_in_cookie    = wp_parse_auth_cookie( '', 'logged_in' );
+			'ID'            => $user_id,
+			'user_login'    => $new_user_name,
+			'user_nicename' => sanitize_title( $new_user_name )
 
-				/** This filter is documented in wp-includes/pluggable.php */
-				$default_cookie_life = apply_filters( 'auth_cookie_expiration', ( 2 * DAY_IN_SECONDS ), $user_id, false );
-				$remember            = ( ( $logged_in_cookie['expiration'] - time() ) > $default_cookie_life );
+		) );
 
-				wp_set_auth_cookie( $user_id, $remember );
-		                
-            }
+		// manually update user_login
+		$wpdb->update( $wpdb->users, array( 'user_login' => $new_user_name ), array( 'ID' => $user_id ), array( '%s' ), array( '%d' ) );
+
+		// delete object cache
+		clean_user_cache( $user_id );
+		wp_cache_delete( $user_id, 'users' );
+		wp_cache_delete( 'bp_core_userdata_' . $user_id, 'bp' );
+		wp_cache_delete( 'bp_user_username_' . $user_id, 'bp' );
+		wp_cache_delete( 'bp_user_domain_' . $user_id, 'bp' );
+
+		// reset auth cookie for new user_login
+		// only do this if the current user is attempting to change their own username
+		// copies auth cookie logic from wp_update_user()
+		if ( bp_is_my_profile() ) {
+			wp_clear_auth_cookie();
+			// Here we calculate the expiration length of the current auth cookie and compare it to the default expiration.
+			// If it's greater than this, then we know the user checked 'Remember Me' when they logged in.
+			$logged_in_cookie    = wp_parse_auth_cookie( '', 'logged_in' );
+
+			/** This filter is documented in wp-includes/pluggable.php */
+			$default_cookie_life = apply_filters( 'auth_cookie_expiration', ( 2 * DAY_IN_SECONDS ), $user_id, false );
+			$remember            = ( ( $logged_in_cookie['expiration'] - time() ) > $default_cookie_life );
+
+			wp_set_auth_cookie( $user_id, $remember );
+
+		}
 
             //if multisite and the user was super admin, mark him back as super admin
-            if ( is_multisite() && $is_super_admin ) {
-	            grant_super_admin( $user_id );
-	        }
+		if ( is_multisite() && $is_super_admin ) {
+			grant_super_admin( $user_id );
+		}
 
-            // add message
-            bp_core_add_message( __( 'Username Changed Successfully!', 'bp-username-changer' ) );
+		// add message
+		bp_core_add_message( __( 'Username Changed Successfully!', 'bp-username-changer' ) );
 
-            // fetch the user object just in case plugins altered the user_login
-            $user = new WP_User( $user_id );
-            // hook for plugins
-            do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata, $user );
-            // redirect
-            // bp_core_get_user_domain() requires the new user_nicename / user_login
-            bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
+		// fetch the user object just in case plugins altered the user_login
+		$user = new WP_User( $user_id );
+		// hook for plugins
+		do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata, $user );
+		// redirect
+		// bp_core_get_user_domain() requires the new user_nicename / user_login
+		bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 
-			$this->load_template();
+		$this->load_template();
     }
     
 	public function load_template() {
