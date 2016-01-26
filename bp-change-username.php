@@ -101,28 +101,28 @@ class BP_Username_Change_Helper {
 		$is_super_admin = false;
 		$user_id        = bp_displayed_user_id();
 
-		if ( isset( $_POST['change_username_submit'] ) ) {
-			
-			if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'bp-change-username' ) ) {
-				return ;//just don't do anything, we don't want to show the error to end user
-			}
-            //check_admin_referer('bp_settings_change_username');
-            $new_user_name = $_POST['new_user_name'];
-            // username_exists() references the userlogins object cache, so we must clear
-            // it before using the function
-            wp_cache_delete( $new_user_name, 'userlogins' );
-            wp_cache_delete( $_POST['current_user_name'], 'userlogins' );
+		if (  ! isset( $_POST['change_username_submit'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp-change-username' ) ) {
+			$this->load_template();
+			exit( 0 );
+		} 
+	
+		//check_admin_referer('bp_settings_change_username');
+		$new_user_name = $_POST['new_user_name'];
+		// username_exists() references the userlogins object cache, so we must clear
+		// it before using the function
+		wp_cache_delete( $new_user_name, 'userlogins' );
+		wp_cache_delete( $_POST['current_user_name'], 'userlogins' );
 
-            //if the username is empty or invalid
-            if ( empty( $new_user_name ) || ! validate_username( $new_user_name ) ) {
-				$error->add( 'invalid', __( 'Please enter a valid Username!', 'bp-username-changer' ) );
-            } elseif ( ! $error && $bp->displayed_user->userdata->user_login == $new_user_name ) {
-				$error->add('nochange', __( 'Please enter a different Username!', 'bp-username-changer' ) );
-            } elseif ( ! $error && username_exists( $new_user_name ) ) {
-				$error->add('exiting_username', sprintf( __( 'The Username %s already exists. Please use a different username!', 'bp-username-changer' ), $new_user_name ) );
-            } elseif ( ! $error && $this->is_reserved_name( $new_user_name ) )  {
-				$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name ) );
-            }
+		//if the username is empty or invalid
+		if ( empty( $new_user_name ) || ! validate_username( $new_user_name ) ) {
+			$error->add( 'invalid', __( 'Please enter a valid Username!', 'bp-username-changer' ) );
+		} elseif ( $bp->displayed_user->userdata->user_login == $new_user_name ) {
+			$error->add('nochange', __( 'Please enter a different Username!', 'bp-username-changer' ) );
+		} elseif ( username_exists( $new_user_name ) ) {
+			$error->add('exiting_username', sprintf( __( 'The Username %s already exists. Please use a different username!', 'bp-username-changer' ), $new_user_name ) );
+		} elseif ( $this->is_reserved_name( $new_user_name ) )  {
+			$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name ) );
+		}
 
 			$error = apply_filters( 'bp_username_changer_validation_errors', $error, $new_user_name );
             //if there was an error
@@ -198,16 +198,17 @@ class BP_Username_Change_Helper {
             // bp_core_get_user_domain() requires the new user_nicename / user_login
             bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 
-        }
-        
+			$this->load_template();
+    }
+    
+	public function load_template() {
+		        
         //show title &form
 		add_action( 'bp_template_title', array( $this, 'print_title' ) );
 		add_action( 'bp_template_content', array( $this, 'print_form' ) );
 		
         bp_core_load_template( apply_filters( 'bp_username_changer_template_settings', 'members/single/plugins' ) );
-    
-    }
-    
+	}
     /**
     * Change Username form
     *
