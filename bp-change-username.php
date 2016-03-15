@@ -6,7 +6,7 @@
  * Author URI: http://buddydev.com/members/sbrajesh
  * Version: 1.2.0
  * License: GPL
- * 
+ *
  */
 /**
  * allow users to change their username
