@@ -4,7 +4,7 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.2.0
+ * Version: 1.2.1
  * License: GPL
  *
  */
@@ -98,7 +98,7 @@ class BP_Username_Change_Helper {
 
 		if ( ! isset( $_POST['change_username_submit'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp-change-username' ) ) {
 			$this->load_template();
-			exit( 0 );
+			return ;
 		}
 
 		//check_admin_referer('bp_settings_change_username');
