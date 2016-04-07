@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bpcu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-16 00:27+0530\n"
-"PO-Revision-Date: 2016-03-16 00:28+0530\n"
+"POT-Creation-Date: 2016-04-07 22:50+0530\n"
+"PO-Revision-Date: 2016-04-07 22:50+0530\n"
 "Last-Translator: BuddyDev.com\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -14,44 +14,44 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../bp-change-username.php:74 ../bp-change-username.php:237
+#: ../bp-change-username.php:75 ../bp-change-username.php:238
 msgid "Change Username"
 msgstr ""
 
-#: ../bp-change-username.php:113
+#: ../bp-change-username.php:114
 msgid "Please enter a valid Username!"
 msgstr ""
 
-#: ../bp-change-username.php:115
+#: ../bp-change-username.php:116
 msgid "Please enter a different Username!"
 msgstr ""
 
-#: ../bp-change-username.php:117
+#: ../bp-change-username.php:118
 #, php-format
 msgid "The Username %s already exists. Please use a different username!"
 msgstr ""
 
-#: ../bp-change-username.php:119
+#: ../bp-change-username.php:120
 #, php-format
-msgid "The Username %s is reserved. Please choose a differenet username!"
+msgid "The Username %s is reserved. Please choose a different username!"
 msgstr ""
 
-#: ../bp-change-username.php:182
+#: ../bp-change-username.php:183
 msgid "Username Changed Successfully!"
 msgstr ""
 
-#: ../bp-change-username.php:215
+#: ../bp-change-username.php:216
 msgid "Current User name"
 msgstr ""
 
-#: ../bp-change-username.php:218
+#: ../bp-change-username.php:219
 msgid "New User name"
 msgstr ""
 
-#: ../bp-change-username.php:221
+#: ../bp-change-username.php:222
 msgid "Enter the new Username of your choice"
 msgstr ""
 
-#: ../bp-change-username.php:225
+#: ../bp-change-username.php:226
 msgid "Save Changes"
 msgstr ""

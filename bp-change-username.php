@@ -4,7 +4,7 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.2.1
+ * Version: 1.2.2
  * License: GPL
  *
  */
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
 }
 
-//deprectade BP_USERNAME_CHANGER_SLUG in fafour of BP_USERNAME_CHANGER_SLUG
+//deprected BP_USERNAME_CHANGER_SLUG in favour of BP_USERNAME_CHANGER_SLUG
 //settings subtab slug, change it as you please
 if ( ! defined( 'BP_USERNAME_CHANGER_SLUG' ) ) {
 	define( 'BP_USERNAME_CHANGER_SLUG', 'change-username' );
@@ -44,7 +44,7 @@ class BP_Username_Change_Helper {
 	 */
 	private function setup() {
 
-		add_action( 'bp_init', array( $this, 'load_textdomain' ) );
+		add_action( 'bp_include', array( $this, 'load_textdomain' ) );
 		add_action( 'bp_setup_nav', array( $this, 'nav_setup' ), 11 );
 	}
 
@@ -67,6 +67,7 @@ class BP_Username_Change_Helper {
 		if ( ! bp_is_active( 'settings' ) ) {
 			return;
 		}
+
 
 		$settings_link = bp_displayed_user_domain() . bp_get_settings_slug() . '/';
 
@@ -116,7 +117,7 @@ class BP_Username_Change_Helper {
 		} elseif ( username_exists( $new_user_name ) ) {
 			$error->add( 'exiting_username', sprintf( __( 'The Username %s already exists. Please use a different username!', 'bp-username-changer' ), $new_user_name ) );
 		} elseif ( $this->is_reserved_name( $new_user_name ) ) {
-			$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a differenet username!' ), $new_user_name ) );
+			$error->add( 'reserved_usernam', sprintf( __( 'The Username %s is reserved. Please choose a different username!' ), $new_user_name ) );
 		}
 
 		$error = apply_filters( 'bp_username_changer_validation_errors', $error, $new_user_name );
