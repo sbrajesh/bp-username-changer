@@ -1,57 +1,58 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: bpcu\n"
+"Project-Id-Version: BuddyPress Username Changer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-07 22:50+0530\n"
-"PO-Revision-Date: 2016-04-07 22:50+0530\n"
+"POT-Creation-Date: 2017-10-19 02:39+0530\n"
+"PO-Revision-Date: 2017-10-19 02:39+0530\n"
 "Last-Translator: BuddyDev.com\n"
 "Language-Team: \n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../bp-change-username.php:75 ../bp-change-username.php:238
+#: ../bp-change-username.php:83 ../bp-change-username.php:257
 msgid "Change Username"
 msgstr ""
 
-#: ../bp-change-username.php:114
+#: ../bp-change-username.php:123
 msgid "Please enter a valid Username!"
 msgstr ""
 
-#: ../bp-change-username.php:116
+#: ../bp-change-username.php:125
 msgid "Please enter a different Username!"
 msgstr ""
 
-#: ../bp-change-username.php:118
+#: ../bp-change-username.php:127
 #, php-format
 msgid "The Username %s already exists. Please use a different username!"
 msgstr ""
 
-#: ../bp-change-username.php:120
+#: ../bp-change-username.php:129
 #, php-format
 msgid "The Username %s is reserved. Please choose a different username!"
 msgstr ""
 
-#: ../bp-change-username.php:183
+#: ../bp-change-username.php:192
 msgid "Username Changed Successfully!"
 msgstr ""
 
-#: ../bp-change-username.php:216
-msgid "Current User name"
+#: ../bp-change-username.php:235
+msgid "Current Username"
 msgstr ""
 
-#: ../bp-change-username.php:219
-msgid "New User name"
+#: ../bp-change-username.php:238
+msgid "New Username"
 msgstr ""
 
-#: ../bp-change-username.php:222
+#: ../bp-change-username.php:241
 msgid "Enter the new Username of your choice"
 msgstr ""
 
-#: ../bp-change-username.php:226
+#: ../bp-change-username.php:246
 msgid "Save Changes"
 msgstr ""

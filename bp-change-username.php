@@ -4,7 +4,7 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.2.2
+ * Version: 1.2.3
  * License: GPL
  */
 
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 0 );
 }
 
-// deprected BP_USERNAME_CHANGER_SLUG in favour of BP_USERNAME_CHANGER_SLUG
+// deprecated BP_USERNAME_CHANGER_SLUG in favour of BP_USERNAME_CHANGER_SLUG
 // settings subtab slug, change it as you please.
 if ( ! defined( 'BP_USERNAME_CHANGER_SLUG' ) ) {
 	define( 'BP_USERNAME_CHANGER_SLUG', 'change-username' );
