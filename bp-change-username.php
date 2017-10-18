@@ -4,7 +4,7 @@
  * Plugin URI: http://buddydev.com/plugins/buddypress-username-changer/
  * Author: Brajesh Singh
  * Author URI: http://buddydev.com/members/sbrajesh
- * Version: 1.2.3
+ * Version: 1.2.4
  * License: GPL
  */
 
@@ -115,7 +115,7 @@ class BP_Username_Change_Helper {
 		// username_exists() references the user logins object cache, so we must clear
 		// it before using the function.
 		wp_cache_delete( $new_user_name, 'userlogins' );
-		$current_username = isset( $_POST['current_user_name'] ) ? $_POST['current_user_name'] : bp_displayed_user_username();
+		$current_username = isset( $_POST['current_user_name'] ) ? $_POST['current_user_name'] : bp_get_displayed_user_username();
 		wp_cache_delete( $current_username, 'userlogins' );
 
 		// if the username is empty or invalid.
