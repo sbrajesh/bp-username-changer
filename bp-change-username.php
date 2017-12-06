@@ -57,6 +57,9 @@ class BP_Username_Change_Helper {
 	private function setup() {
 		add_action( 'bp_include', array( $this, 'load_textdomain' ) );
 		add_action( 'bp_setup_nav', array( $this, 'nav_setup' ), 11 );
+		// User name availability checker.
+		add_filter( 'buddydev_username_availability_checker_load_assets', array( $this, 'enable_ua_assets' ) );
+		add_filter( 'buddydev_uachecker_selectors', array( $this, 'add_ua_css_selector' ) );
 	}
 
 	/**
@@ -255,6 +258,33 @@ class BP_Username_Change_Helper {
 	 */
 	public function print_title() {
 		 _e( 'Change Username', 'bp-username-changer' );
+	}
+
+
+	/**
+	 * Enable asset loading on the Change username page.
+	 *
+	 * @param bool $load shpuld load asset?
+	 *
+	 * @return bool
+	 */
+	public function enable_ua_assets( $load ) {
+		if ( function_exists( 'bp_is_active' ) && bp_is_active( 'settings' ) && bp_is_settings_component() && bp_is_current_action( BP_USERNAME_CHANGER_SLUG ) ) {
+			$load = true;
+		}
+
+		return $load;
+	}
+
+	/**
+	 * Add our css selector.
+	 *
+	 * @param string $selector selectors list.
+	 *
+	 * @return string
+	 */
+	public function add_ua_css_selector( $selector ) {
+		return $selector . ',form.standard-form #new_user_name';
 	}
 
 	/**
