@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: BuddyPress Username Changer
- * Plugin URI: https://buddydev.com/plugins/buddypress-username-changer/
+ * Plugin URI: https://buddydev.com/plugins/bp-username-changer/
  * Author: BuddyDev
  * Author URI: https://buddydev.com/members/sbrajesh
- * Version: 1.2.5
+ * Version: 1.2.6
  * License: GPL
  */
 
