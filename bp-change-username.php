@@ -196,11 +196,26 @@ class BP_Username_Change_Helper {
 
 		// fetch the user object just in case plugins altered the user_login.
 		$user = new WP_User( $user_id );
+
+		$redirect_url = '';
+		if ( function_exists( 'bp_members_get_user_url' ) ) {
+            // Updating because of bp_members_get_user_slug function.
+			$bp->loggedin_user->userdata->user_nicename = $user->user_nicename;
+			$bp->loggedin_user->userdata->user_login    = $user->user_login;
+
+			$redirect_url = bp_members_get_user_url( $user->ID, array(
+				'single_item_component' => 'settings',
+				'single_item_action'    => BP_USERNAME_CHANGER_SLUG,
+			) );
+		} else {
+			$redirect_url = bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/';
+		}
+
 		// hook for plugins.
 		do_action( 'bp_username_changed', $new_user_name, $bp->displayed_user->userdata, $user );
 		// redirect
 		// bp_core_get_user_domain() requires the new user_nicename / user_login.
-		bp_core_redirect( bp_core_get_user_domain( $user_id, $user->user_nicename, $user->user_login ) . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
+		bp_core_redirect( $redirect_url );
 
 		$this->load_template();
 	}
