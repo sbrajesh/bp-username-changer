@@ -4,7 +4,7 @@
  * Plugin URI: https://buddydev.com/plugins/bp-username-changer/
  * Author: BuddyDev
  * Author URI: https://buddydev.com/members/sbrajesh
- * Version: 1.2.7
+ * Version: 1.2.8
  * License: GPL
  */
 
