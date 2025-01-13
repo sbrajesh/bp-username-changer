@@ -4,7 +4,7 @@
  * Plugin URI: https://buddydev.com/plugins/bp-username-changer/
  * Author: BuddyDev
  * Author URI: https://buddydev.com/members/sbrajesh
- * Version: 1.2.8
+ * Version: 1.2.9
  * License: GPL
  */
 
@@ -80,7 +80,7 @@ class BP_Username_Change_Helper {
 		}
 
 
-		$settings_link = bp_displayed_user_domain() . bp_get_settings_slug() . '/';
+		$settings_link = $this->get_settings_url();
 
 		bp_core_new_subnav_item( array(
 			'name'            => __( 'Change Username', 'bp-username-changer' ),
@@ -137,7 +137,7 @@ class BP_Username_Change_Helper {
 		// show error &redirect.
 		if ( $error->get_error_code() ) {
 			bp_core_add_message( $error->get_error_message(), 'error' );
-			bp_core_redirect( bp_displayed_user_domain() . $bp->settings->slug . '/' . BP_USERNAME_CHANGER_SLUG . '/' );
+			bp_core_redirect( untrailingslashit( $this->get_settings_url() ). '/' . BP_USERNAME_CHANGER_SLUG . '/' );
 		}
 
 		// if it is multisite, before change the username, revoke the admin capability.
@@ -335,6 +335,25 @@ class BP_Username_Change_Helper {
 
 		return apply_filters( 'bp_username_changer_is_reserved', $is_reserved, $username );
 	}
+
+
+    /**
+     * Get the settings url for the displayed user.
+     *
+     * @return string
+     */
+	private function get_settings_url() {
+
+		if ( function_exists( 'bp_displayed_user_url' ) && function_exists( 'bp_members_get_path_chunks' ) ) {
+			$url = bp_displayed_user_url(
+				bp_members_get_path_chunks( array( bp_get_settings_slug() ) )
+			);
+		} else {
+			$url = bp_displayed_user_domain() . bp_get_settings_slug() . '/';
+		}
+
+        return $url;
+    }
 
 }
 
